@@ -1,17 +1,32 @@
-# otakudesu-api
+# Otakudesu API (Web Scraper)
 
 <div align="center">
 	
-## Otakudesu API based on Web Scraping
+Otakudesu API is an npm package that can be used to retrieve data from the otakudesu website. This package provides several APIs that can be used to retrieve anime lists, ongoing anime, complete anime, anime information, episodes, genre lists, anime lists by genre, and video links.
 
 </div>
 
+## Installation
+
+To install the OdesuS package, you can use npm. Open your terminal or command prompt and type:
+
+```sh
+# with npm
+npm install otakudesu-api
+# with pnpm
+pnpm add otakudesu-api
+# with yarn
+yarn add otakudesu-api
+```
+
 ## Usage
 
-```ts
-import OtakudesuApi from "otakudesu-api"
+For usage, you can see the `tests/` folder. The tests folder contains several examples of how to use the Otakudesu API package.
 
-const api = OtakudesuApi();
+```ts
+import OtakudesuApi from 'otakudesu-api'
+
+const api = OtakudesuApi()
 
 // ...
 ```
@@ -51,10 +66,10 @@ const genres = await api.genres()
 ```ts
 // ...
 
-const genreDetail = await api.genreDetail('/genres/action/')
+const genres = await api.genres('/genres/action/')
 
 // with paging
-const genreDetail = await api.genreDetail('/genres/action/', 2)
+const genres = await api.genres('/genres/action/', 2)
 ```
 
 ### Get Detail
@@ -72,6 +87,10 @@ const detail = await api.detail('/anime/shaman-king-flowers-sub-indo/')
 
 const video = await api.video('/episode/skflower-episode-10-sub-indo/')
 ```
+
+## Contribution, and issues
+
+Contributions are welcome, and if you have any issues with this package, you are welcome to open the issue on the [github repository](https://github.com/hansputera/otakudesu-api/issues).
 
 ## License
 
