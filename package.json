@@ -1,0 +1,29 @@
+{
+  "name": "otakudesu-api",
+  "version": "0.1.0",
+  "description": "Otakudesu API based on Web Scraping",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "ts-node tests/example.test.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "Web Scraper",
+    "Web Scraping",
+    "Web API"
+  ],
+  "author": "zeindevs",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "axios": "^1.6.7",
+    "cheerio": "1.0.0-rc.12"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.26",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.2"
+  }
+}
