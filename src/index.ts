@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 import * as Cheerio from 'cheerio'
 
-import { config } from './config'
+import { OtakudesuConfig as config } from './config'
 import {
 	IDetail,
 	IEpisode,
@@ -18,7 +18,10 @@ import {
 } from './types'
 
 export default class OtakudesuApi {
-	constructor(public AxiosOts?: AxiosRequestConfig) {
+	constructor(
+		private baseURL: string = 'https://otakudesu.cloud',
+		private AxiosOts?: AxiosRequestConfig,
+	) {
 		this.AxiosOts = AxiosOts
 	}
 
@@ -54,7 +57,7 @@ export default class OtakudesuApi {
 		{ agent = config.UA_WINDOWS, axiosOptions = {} }: TFetchURL,
 	): Promise<AxiosResponse<any, any>> => {
 		return axios({
-			baseURL: config.BASE_URL,
+			baseURL: this.baseURL,
 			url,
 			headers: axiosOptions.headers ? axiosOptions.headers : this.makeHeaders(agent),
 			method: axiosOptions.method || 'GET',
@@ -170,13 +173,13 @@ export default class OtakudesuApi {
 			const html = (await this.fetchUrl(url, { agent: config.UA_WINDOWS }))?.data
 			const $ = Cheerio.load(html)
 			let info: IInfo = {}
-			$('div.infozingle > p').each((i, elm) => {
-				let [title, value] = $(elm).find('span').text().split(':')
-				let label: TInfo = title.trim().replace(' ', '_').toLowerCase() as TInfo
-				info[label] = value.trim()
+			$('div.infozingle > p').each((_, elm) => {
+				let [title, value] = $(elm).find('span').text().split(':')!
+				let label: TInfo = title?.trim().replace(' ', '_').toLowerCase() as TInfo
+				info[label] = value?.trim()
 				// Convert genre to array
 				if (label === 'genre') {
-					info['genre'] = this.parseGenre(value)
+					info['genre'] = this.parseGenre(value!)
 				}
 			})
 			let episodes: IEpisode[] = []
@@ -214,13 +217,13 @@ export default class OtakudesuApi {
 			const response = (
 				await this.fetchUrl('', {
 					axiosOptions: {
-						baseURL: config.ADMIN_AJAX_URL,
+						baseURL: `${this.baseURL}/wp-admin/admin-ajax.php`,
 						method: 'POST',
 						headers: {
 							...this.makeHeaders(config.UA_WINDOWS),
 							'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
 							'x-requested-with': 'XMLHttpRequest',
-							Referer: `${config.BASE_URL}${url}`,
+							Referer: `${this.baseURL}${url}`,
 						},
 						data,
 					},
@@ -250,7 +253,7 @@ export default class OtakudesuApi {
 			let m360p: IVideo[] = []
 			let m480p: IVideo[] = []
 			let m720p: IVideo[] = []
-			new Array('m360p', 'm480p', 'm720p').forEach((media, i) => {
+			new Array('m360p', 'm480p', 'm720p').forEach((media) => {
 				$('div#embed_holder > div.mirrorstream')
 					.find(`ul.${media} > li`)
 					.each((_, elm) => {
@@ -329,10 +332,7 @@ export default class OtakudesuApi {
 	 * @param page Page number
 	 * @returns
 	 * */
-	public genres = async (
-		genre?: string,
-		page: number = 1,
-	): Promise<IGenreData> => {
+	public genres = async (genre: string = '', page: number = 1): Promise<IGenreData> => {
 		try {
 			const html = (
 				await this.fetchUrl(genre ? `${genre}page/${page}` : '/genre-list/', {
