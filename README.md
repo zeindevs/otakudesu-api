@@ -3,7 +3,6 @@
 <div align="center">
 
 ![Otakudesu API](https://socialify.git.ci/zeindevs/otakudesu-api/image?description=1&font=Raleway&forks=1&issues=1&language=1&name=1&pattern=Solid&pulls=1&stargazers=1&theme=Dark)
-	
 Otakudesu API is an npm package that can be used to retrieve data from the otakudesu website. This package provides several APIs that can be used to retrieve anime lists, ongoing anime, complete anime, anime information, episodes, genre lists, anime lists by genre, and video links.
 
 [![HitCount](http://hits.dwyl.com/zeindevs/otakudesu-api.svg)](http://hits.dwyl.com/zeindevs/otakudesu-api) [![GitHub license](https://img.shields.io/github/license/zeindevs/otakudesu-api)](https://github.com/zeindevs/otakudesu-api/blob/master/LICENSE) [![Npm package monthly downloads](https://badgen.net/npm/dm/otakudesu-api)](https://npmjs.com/package/otakudesu-api) ![GitHub repo size](https://img.shields.io/github/repo-size/zeindevs/otakudesu-api?style=flat) [![npm version](https://badge.fury.io/js/otakudesu-api.svg)](https://badge.fury.io/js/otakudesu-api)
@@ -30,9 +29,9 @@ For usage, you can see the `tests/` folder. The tests folder contains several ex
 ```ts
 import OtakudesuApi from 'otakudesu-api'
 
-const api = OtakudesuApi()
-
-// ...
+const api = new OtakudesuApi()
+// or
+const api = new OtakudesuApi('https://otakudesu.cloud')
 ```
 
 ### Get Ongoing List
@@ -94,7 +93,7 @@ const video = await api.video('/episode/skflower-episode-10-sub-indo/')
 
 ## Contribution, and issues
 
-Contributions are welcome, and if you have any issues with this package, you are welcome to open the issue on the [github repository](https://github.com/hansputera/otakudesu-api/issues).
+Contributions are welcome, and if you have any issues with this package, you are welcome to open the issue on the [github repository](https://github.com/zeindevs/otakudesu-api/issues).
 
 ## License
 
