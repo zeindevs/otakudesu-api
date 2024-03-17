@@ -30,6 +30,8 @@ For usage, you can see the `tests/` folder. The tests folder contains several ex
 import OtakudesuApi from 'otakudesu-api'
 
 const api = new OtakudesuApi()
+// or
+const api = new OtakudesuApi('https://otakudesu.cloud')
 ```
 
 ### Get Ongoing List
@@ -91,7 +93,7 @@ const video = await api.video('/episode/skflower-episode-10-sub-indo/')
 
 ## Contribution, and issues
 
-Contributions are welcome, and if you have any issues with this package, you are welcome to open the issue on the [github repository](https://github.com/hansputera/otakudesu-api/issues).
+Contributions are welcome, and if you have any issues with this package, you are welcome to open the issue on the [github repository](https://github.com/zeindevs/otakudesu-api/issues).
 
 ## License
 
