@@ -4,6 +4,7 @@ import * as Cheerio from 'cheerio'
 import { OtakudesuConfig as config } from './config'
 import {
 	IDetail,
+	IDownload,
 	IEpisode,
 	IGenre,
 	IGenreData,
@@ -14,6 +15,7 @@ import {
 	IVideoData,
 	Payload,
 	TFetchURL,
+	TFilterDownload,
 	TInfo,
 } from './types'
 
@@ -96,6 +98,10 @@ export default class OtakudesuApi {
 			.split(',')
 			.forEach((x: string) => data.push(x.trim()))
 		return data
+	}
+
+	private filterDownload = (downloads: IDownload[], value: TFilterDownload) => {
+		return downloads.filter((x) => x.format.replace(' ', '-').toLowerCase() === value)
 	}
 
 	/**
@@ -279,12 +285,39 @@ export default class OtakudesuApi {
 						}
 					})
 			})
+			let downloads: IDownload[] = []
+			$('div.download > ul').each((_, elm) => {
+				$(elm)
+					.find('li')
+					.each((_, el) => {
+						let format = $(el).find('strong').text().trim()
+						let size = $(el).find('i').text().trim()
+						$(el)
+							.find('a')
+							.each((_, e) => {
+								downloads.push({
+									format: format,
+									title: $(e).text().trim(),
+									url: $(e).attr('href')!,
+									size: size,
+								})
+							})
+					})
+			})
 			return {
 				url: iframe,
 				mirror: {
 					'360p': m360p,
 					'480p': m480p,
 					'720p': m720p,
+				},
+				downloads: {
+					'mp4-360p': this.filterDownload(downloads, 'mp4-360p'),
+					'mp4-480p': this.filterDownload(downloads, 'mp4-480p'),
+					'mp4-720p': this.filterDownload(downloads, 'mp4-720p'),
+					'mkv-480p': this.filterDownload(downloads, 'mkv-480p'),
+					'mkv-720p': this.filterDownload(downloads, 'mkv-720p'),
+					'mkv-1080p': this.filterDownload(downloads, 'mkv-1080p'),
 				},
 			}
 		} catch (err) {
