@@ -17,6 +17,7 @@ import {
 	TFetchURL,
 	TFilterDownload,
 	TInfo,
+	TVideoFormat,
 } from './types'
 
 export default class OtakudesuApi {
@@ -102,6 +103,10 @@ export default class OtakudesuApi {
 
 	private filterDownload = (downloads: IDownload[], value: TFilterDownload) => {
 		return downloads.filter((x) => x.format.replace(' ', '-').toLowerCase() === value)
+	}
+
+	private filterMirror = (mirrors: IVideo[], value: TVideoFormat) => {
+		return mirrors.filter((x) => x.format === value)
 	}
 
 	/**
@@ -256,33 +261,21 @@ export default class OtakudesuApi {
 			const $ = Cheerio.load(html)
 			let iframe = $('div#embed_holder').find('iframe').attr('src')!
 			let action = html.match(/action:"([^"]*)"/g).map((match: string[]) => match.slice(8, -1))
-			let m360p: IVideo[] = []
-			let m480p: IVideo[] = []
-			let m720p: IVideo[] = []
+			let videos: IVideo[] = []
 			new Array('m360p', 'm480p', 'm720p').forEach((media) => {
 				$('div#embed_holder > div.mirrorstream')
 					.find(`ul.${media} > li`)
 					.each((_, elm) => {
 						let key = $(elm).find('a').attr('data-content')!
-						let item = {
+						videos.push({
 							key,
+							format: media as TVideoFormat,
 							provider: $(elm).find('a').text().trim(),
 							payload: {
 								noice: { action: action[1] },
 								video: { ...JSON.parse(atob(key)), action: action[0] },
 							},
-						}
-						switch (media) {
-							case 'm360p':
-								m360p.push(item)
-								break
-							case 'm480p':
-								m480p.push(item)
-								break
-							case 'm720p':
-								m720p.push(item)
-								break
-						}
+						})
 					})
 			})
 			let downloads: IDownload[] = []
@@ -307,9 +300,9 @@ export default class OtakudesuApi {
 			return {
 				url: iframe,
 				mirror: {
-					'360p': m360p,
-					'480p': m480p,
-					'720p': m720p,
+					'360p': this.filterMirror(videos, 'm360p'),
+					'480p': this.filterMirror(videos, 'm480p'),
+					'720p': this.filterMirror(videos, 'm720p'),
 				},
 				downloads: {
 					'mp4-360p': this.filterDownload(downloads, 'mp4-360p'),

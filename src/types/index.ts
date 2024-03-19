@@ -46,8 +46,11 @@ export interface IDetail {
   episodes: IEpisode[]
 }
 
+export type TVideoFormat = 'm360p' | 'm480p' | 'm720p'
+
 export interface IVideo {
   key: string
+  format: TVideoFormat
   provider: string
   payload: {
     noice: {
@@ -84,7 +87,13 @@ export interface IInfo {
   genre?: string[] | string
 }
 
-export type TFilterDownload = 'mp4-360p' | 'mp4-480p' | 'mp4-720p' | 'mkv-480p' | 'mkv-720p' | 'mkv-1080p'
+export type TFilterDownload =
+  | 'mp4-360p'
+  | 'mp4-480p'
+  | 'mp4-720p'
+  | 'mkv-480p'
+  | 'mkv-720p'
+  | 'mkv-1080p'
 
 export interface IDownload {
   format: string
