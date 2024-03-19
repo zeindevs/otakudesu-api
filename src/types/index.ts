@@ -42,12 +42,15 @@ export interface IEpisode {
 }
 
 export interface IDetail {
-  info: any
+  info: IInfo
   episodes: IEpisode[]
 }
 
+export type TVideoFormat = 'm360p' | 'm480p' | 'm720p'
+
 export interface IVideo {
   key: string
+  format: TVideoFormat
   provider: string
   payload: {
     noice: {
@@ -84,12 +87,35 @@ export interface IInfo {
   genre?: string[] | string
 }
 
+export type TFilterDownload =
+  | 'mp4-360p'
+  | 'mp4-480p'
+  | 'mp4-720p'
+  | 'mkv-480p'
+  | 'mkv-720p'
+  | 'mkv-1080p'
+
+export interface IDownload {
+  format: string
+  title: string
+  url: string
+  size: string
+}
+
 export interface IVideoData {
   url: string
   mirror: {
     '360p': IVideo[]
     '480p': IVideo[]
     '720p': IVideo[]
+  }
+  downloads: {
+    'mp4-360p': IDownload[]
+    'mp4-480p': IDownload[]
+    'mp4-720p': IDownload[]
+    'mkv-480p': IDownload[]
+    'mkv-720p': IDownload[]
+    'mkv-1080p': IDownload[]
   }
 }
 
