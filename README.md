@@ -11,7 +11,7 @@ Otakudesu API is an npm package that can be used to retrieve data from the otaku
 
 ## Installation
 
-To install the OdesuS package, you can use npm. Open your terminal or command prompt and type:
+To install the Otakudesu package, you can use npm. Open your terminal or command prompt and type:
 
 ```sh
 # with npm

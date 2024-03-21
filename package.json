@@ -1,6 +1,6 @@
 {
   "name": "otakudesu-api",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Otakudesu API (Web Scraper)",
    "main": "dist/index.js",
   "exports": "./dist/index.mjs",
@@ -14,10 +14,6 @@
     "LICENSE"
   ],
   "keywords": [
-    "scraper",
-    "scraping",
-    "web-scraper",
-    "web-scraping",
     "anime",
     "anime-scraper",
     "anime-scraping",
