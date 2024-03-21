@@ -22,7 +22,8 @@ describe('API test', () => {
   it('should be can fetch video', async () => {
     const video = await api.video('/episode/skflower-episode-10-sub-indo/')
     expect(video).not.toBe(null)
-    expect(video['mirror']['360p']).not.toBe(null)
+    expect(video['mirror']).not.toBe(null)
+    expect(video['downloads']).not.toBe(null)
   })
 
   it('should be can fetch genres', async () => {

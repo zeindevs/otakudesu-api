@@ -1,3 +1,19 @@
+/**
+ * Copyright 2024 zeindevs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * */
+
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 import * as Cheerio from 'cheerio'
 
@@ -28,6 +44,13 @@ export default class OtakudesuApi {
 		this.AxiosOts = AxiosOts
 	}
 
+	/**
+	 * Create header request
+	 *
+	 * @param agent User agent
+	 * @param options Axios request config
+	 * @returns
+	 * */
 	private makeHeaders = (agent: string = config.UA_WINDOWS, options?: AxiosRequestConfig): any => {
 		return {
 			'user-agent': agent,
@@ -101,10 +124,24 @@ export default class OtakudesuApi {
 		return data
 	}
 
+	/**
+	 * Filter downloads
+	 *
+	 * @param downloads Data
+	 * @param value Filter value
+	 * @returns
+	 * */
 	private filterDownload = (downloads: IDownload[], value: TFilterDownload) => {
 		return downloads.filter((x) => x.format.replace(' ', '-').toLowerCase() === value)
 	}
 
+	/**
+	 * Filter mirror
+	 *
+	 * @param mirrors Data
+	 * @param value Filter value
+	 * @returns
+	 * */
 	private filterMirror = (mirrors: IVideo[], value: TVideoFormat) => {
 		return mirrors.filter((x) => x.format === value)
 	}
