@@ -19,11 +19,14 @@ import * as Cheerio from 'cheerio'
 
 import { OtakudesuConfig as config } from './config'
 import {
+	IAnimeList,
 	IDetail,
 	IDownload,
 	IEpisode,
 	IGenre,
 	IGenreData,
+	IAnimeListItem,
+	IAnimeListData,
 	IInfo,
 	IPost,
 	IPostData,
@@ -255,12 +258,12 @@ export default class OtakudesuApi {
 		try {
 			let data: URLSearchParams = payload?.nonce
 				? new URLSearchParams({
-						id: payload?.id!.toString(),
-						i: payload?.i!.toString(),
-						q: payload?.q!,
-						nonce: payload?.nonce,
-						action: payload?.action,
-					})
+					id: payload?.id!.toString(),
+					i: payload?.i!.toString(),
+					q: payload?.q!,
+					nonce: payload?.nonce,
+					action: payload?.action,
+				})
 				: new URLSearchParams({ action: payload?.action! })
 			const response = (
 				await this.fetchUrl('', {
@@ -358,16 +361,15 @@ export default class OtakudesuApi {
 	/**
 	 * Fetch anime list
 	 *
-	 * @param genre Genre name
 	 * @returns
 	 * */
-	public list = async (): Promise<any> => {
+	public list = async (): Promise<IAnimeListData> => {
 		try {
 			const html = (await this.fetchUrl('/anime-list/', { agent: config.UA_WINDOWS }))?.data
 			const $ = Cheerio.load(html)
-			let data: any = {}
+			let data: IAnimeList = {}
 			$('div#abtext > div.bariskelom').each((_, elm) => {
-				let group: any[] = []
+				let group: IAnimeListItem[] = []
 				let title = $(elm).find('div.barispenz').text().trim()
 				$(elm)
 					.find('div.penzbar')
@@ -376,7 +378,7 @@ export default class OtakudesuApi {
 						if (text) {
 							group[i] = {
 								title: text.text().trim(),
-								url: text.attr('href'),
+								url: text.attr('href')!,
 							}
 							data[title] = group
 						}
