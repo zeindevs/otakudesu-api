@@ -43,6 +43,12 @@ describe('API test', () => {
     expect(genre['data'][0]['genre']).not.toBe(null)
   })
 
+  it('should be can search anime', async () => {
+    const search = await api.search('Solo Leveling')
+    expect(search).not.toBe(null)
+    expect(search['data'].length).not.toBe(0)
+  })
+
   it('should be can send payload', async () => {
     const nonce = await api.sendPayload('/episode/skflower-episode-10-sub-indo/', {
       action: 'aa1208d27f29ca340c92c66d1926f13f',

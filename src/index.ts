@@ -258,12 +258,12 @@ export default class OtakudesuApi {
 		try {
 			let data: URLSearchParams = payload?.nonce
 				? new URLSearchParams({
-					id: payload?.id!.toString(),
-					i: payload?.i!.toString(),
-					q: payload?.q!,
-					nonce: payload?.nonce,
-					action: payload?.action,
-				})
+						id: payload?.id!.toString(),
+						i: payload?.i!.toString(),
+						q: payload?.q!,
+						nonce: payload?.nonce,
+						action: payload?.action,
+					})
 				: new URLSearchParams({ action: payload?.action! })
 			const response = (
 				await this.fetchUrl('', {
@@ -435,6 +435,46 @@ export default class OtakudesuApi {
 					}
 				})
 				return { data, total: data.length }
+			}
+		} catch (err) {
+			throw err
+		}
+	}
+
+	/**
+	 * Search anime
+	 *
+	 * @param q Search params
+	 * @returns
+	 * */
+	public search = async (q: string) => {
+		try {
+			let html = (await this.fetchUrl(`?s=${q}&post_type=anime`, { agent: config.UA_WINDOWS }))
+				?.data
+			let $ = Cheerio.load(html)
+			let data: any[] = []
+
+			$('ul.chivsrc > li').each((i, elm) => {
+				data[i] = {
+					image: $(elm).find('img').attr('src'),
+					title: $(elm).find('h2 > a').text().trim(),
+					url: $(elm).find('h2 > a').attr('href'),
+					genres:
+						$(elm)
+							.find('div.set')
+							.first()
+							.text()
+							.split(':')[1]
+							.split(',')
+							.map((x) => x.trim()) || [],
+					status: $($(elm).find('div.set').get()[1]).text().split(':')[1].trim() || '',
+					rating: parseFloat($(elm).find('div.set').last().text().split(':')[1]) || null,
+				}
+			})
+
+			return {
+				data,
+				total: data.length,
 			}
 		} catch (err) {
 			throw err
