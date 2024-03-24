@@ -16,6 +16,20 @@ export interface IPostData {
   total_page: number | null
   total: number
 }
+
+export interface IAnimeListItem {
+  title: string
+  url: string
+}
+
+export interface IAnimeList {
+  [key: string]: IAnimeListItem[]
+}
+
+export interface IAnimeListData {
+  data: IAnimeList
+}
+
 export interface IGenre {
   title: string
   url: string

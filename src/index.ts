@@ -19,11 +19,14 @@ import * as Cheerio from 'cheerio'
 
 import { OtakudesuConfig as config } from './config'
 import {
+	IAnimeList,
 	IDetail,
 	IDownload,
 	IEpisode,
 	IGenre,
 	IGenreData,
+	IAnimeListItem,
+	IAnimeListData,
 	IInfo,
 	IPost,
 	IPostData,
@@ -358,16 +361,15 @@ export default class OtakudesuApi {
 	/**
 	 * Fetch anime list
 	 *
-	 * @param genre Genre name
 	 * @returns
 	 * */
-	public list = async (): Promise<any> => {
+	public list = async (): Promise<IAnimeListData> => {
 		try {
 			const html = (await this.fetchUrl('/anime-list/', { agent: config.UA_WINDOWS }))?.data
 			const $ = Cheerio.load(html)
-			let data: any = {}
+			let data: IAnimeList = {}
 			$('div#abtext > div.bariskelom').each((_, elm) => {
-				let group: any[] = []
+				let group: IAnimeListItem[] = []
 				let title = $(elm).find('div.barispenz').text().trim()
 				$(elm)
 					.find('div.penzbar')
@@ -376,7 +378,7 @@ export default class OtakudesuApi {
 						if (text) {
 							group[i] = {
 								title: text.text().trim(),
-								url: text.attr('href'),
+								url: text.attr('href')!,
 							}
 							data[title] = group
 						}
@@ -433,6 +435,46 @@ export default class OtakudesuApi {
 					}
 				})
 				return { data, total: data.length }
+			}
+		} catch (err) {
+			throw err
+		}
+	}
+
+	/**
+	 * Search anime
+	 *
+	 * @param q Search params
+	 * @returns
+	 * */
+	public search = async (q: string) => {
+		try {
+			let html = (await this.fetchUrl(`?s=${q}&post_type=anime`, { agent: config.UA_WINDOWS }))
+				?.data
+			let $ = Cheerio.load(html)
+			let data: any[] = []
+
+			$('ul.chivsrc > li').each((i, elm) => {
+				data[i] = {
+					image: $(elm).find('img').attr('src'),
+					title: $(elm).find('h2 > a').text().trim(),
+					url: $(elm).find('h2 > a').attr('href'),
+					genres:
+						$(elm)
+							.find('div.set')
+							.first()
+							.text()
+							.split(':')[1]
+							.split(',')
+							.map((x) => x.trim()) || [],
+					status: $($(elm).find('div.set').get()[1]).text().split(':')[1].trim() || '',
+					rating: parseFloat($(elm).find('div.set').last().text().split(':')[1]) || null,
+				}
+			})
+
+			return {
+				data,
+				total: data.length,
 			}
 		} catch (err) {
 			throw err
